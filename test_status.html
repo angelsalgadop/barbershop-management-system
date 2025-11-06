@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Status WhatsApp</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.4/socket.io.js"></script>
+</head>
+<body>
+    <h1>Estado WhatsApp - Barberías</h1>
+    <div id="status"></div>
+    
+    <script>
+        const socket = io('http://localhost:3000');
+        
+        socket.on('connect', () => {
+            document.getElementById('status').innerHTML += '<p>✅ Conectado al servidor</p>';
+        });
+        
+        socket.on('whatsapp_ready', (data) => {
+            document.getElementById('status').innerHTML += `<p>✅ WhatsApp Conectado - Número: ${data.number}</p>`;
+        });
+        
+        socket.on('whatsapp_qr', (data) => {
+            document.getElementById('status').innerHTML += '<p>📱 Código QR generado</p>';
+            document.getElementById('status').innerHTML += `<img src="${data.qr}" style="max-width: 300px;">`;
+        });
+        
+        socket.on('whatsapp_initializing', (data) => {
+            document.getElementById('status').innerHTML += '<p>⏳ WhatsApp inicializando...</p>';
+        });
+        
+        socket.on('whatsapp_disconnected', (data) => {
+            document.getElementById('status').innerHTML += '<p>❌ WhatsApp desconectado</p>';
+        });
+    </script>
+</body>
+</html>

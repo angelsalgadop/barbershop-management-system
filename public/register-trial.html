@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - Prueba Gratuita de 30 Días | MiBarberiaWeb</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --dark-color: #1a1a1a;
+            --light-color: #ecf0f1;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+
+        .register-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .register-header {
+            background: linear-gradient(135deg, var(--success-color), var(--secondary-color));
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .register-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="gift" patternUnits="userSpaceOnUse" width="20" height="20"><rect fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1" width="20" height="20"/></pattern></defs><rect width="100" height="100" fill="url(%23gift)"/></svg>');
+        }
+
+        .register-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .trial-badge {
+            background: rgba(255,255,255,0.2);
+            border-radius: 50px;
+            padding: 0.5rem 1.5rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+            backdrop-filter: blur(10px);
+            font-weight: 600;
+        }
+
+        .register-form {
+            padding: 2rem;
+        }
+
+        .form-floating {
+            margin-bottom: 1rem;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .benefits-sidebar {
+            background: var(--light-color);
+            padding: 2rem;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .benefit-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--success-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .timer-container {
+            text-align: center;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        .timer-display {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--warning-color);
+            margin: 0.5rem 0;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            color: white;
+            background: rgba(255,255,255,0.3);
+            transform: translateX(-5px);
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255,255,255,0.3);
+            border-top: 5px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--success-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            margin: 0 auto 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-btn">
+            <i class="fas fa-arrow-left me-2"></i>Volver al inicio
+        </a>
+        
+        <div class="register-container">
+            <div class="register-header">
+                <div class="register-content">
+                    <div class="trial-badge">
+                        <i class="fas fa-gift me-2"></i>¡Oferta Especial!
+                    </div>
+                    <h1 class="mb-3">Prueba <span class="text-warning">30 Días GRATIS</span></h1>
+                    <p class="lead mb-3">Transforma tu barbería con MiBarberiaWeb</p>
+                    
+                    <div class="timer-container">
+                        <p class="mb-1">Esta oferta termina en:</p>
+                        <div class="timer-display" id="countdown">23:59:45</div>
+                        <small>¡No pierdas esta oportunidad única!</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row g-0">
+                <div class="col-lg-8">
+                    <div class="register-form">
+                        <div id="registrationForm">
+                            <h3 class="mb-4">Registra tu Barbería</h3>
+                            <form id="trialForm">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" id="name" name="name" placeholder="Nombre de la barbería" required>
+                                            <label for="name"><i class="fas fa-store me-2"></i>Nombre de la barbería *</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+                                            <label for="email"><i class="fas fa-envelope me-2"></i>Email *</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input type="tel" class="form-control" id="phone" name="phone" placeholder="Teléfono">
+                                            <label for="phone"><i class="fas fa-phone me-2"></i>Teléfono</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input type="tel" class="form-control" id="whatsapp_number" name="whatsapp_number" placeholder="WhatsApp">
+                                            <label for="whatsapp_number"><i class="fab fa-whatsapp me-2"></i>WhatsApp (recomendado)</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-floating">
+                                    <textarea class="form-control" id="address" name="address" placeholder="Dirección" style="height: 100px"></textarea>
+                                    <label for="address"><i class="fas fa-map-marker-alt me-2"></i>Dirección</label>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <select class="form-control" id="billing_day" name="billing_day">
+                                                <option value="1">Día 1 del mes</option>
+                                                <option value="15">Día 15 del mes</option>
+                                            </select>
+                                            <label for="billing_day"><i class="fas fa-calendar me-2"></i>Día de facturación</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input type="number" class="form-control" id="monthly_fee" name="monthly_fee" value="50" step="0.01" readonly>
+                                            <label for="monthly_fee"><i class="fas fa-dollar-sign me-2"></i>Tarifa mensual (USD)</label>
+                                            <small class="text-muted">*Gratis durante los primeros 30 días</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-floating">
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="Contraseña" required minlength="6">
+                                    <label for="password"><i class="fas fa-lock me-2"></i>Contraseña *</label>
+                                    <small class="text-muted">Mínimo 6 caracteres</small>
+                                </div>
+                                
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="terms" required>
+                                    <label class="form-check-label" for="terms">
+                                        Acepto los <a href="#" class="text-primary">términos y condiciones</a> y la <a href="#" class="text-primary">política de privacidad</a>
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check mb-4">
+                                    <input class="form-check-input" type="checkbox" id="newsletter">
+                                    <label class="form-check-label" for="newsletter">
+                                        Recibir novedades y consejos para optimizar mi barbería
+                                    </label>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary-custom">
+                                    <i class="fas fa-rocket me-2"></i>¡Comenzar Prueba Gratuita!
+                                </button>
+                                
+                                <div class="text-center mt-3">
+                                    <small class="text-muted">
+                                        <i class="fas fa-shield-alt me-1"></i>
+                                        Datos 100% seguros y protegidos
+                                    </small>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <div id="successMessage" class="success-message">
+                            <div class="success-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <h3 class="text-success mb-3">¡Registro Exitoso!</h3>
+                            <p class="lead mb-4">Tu barbería ha sido registrada correctamente. Tu período de prueba de 30 días comienza ahora.</p>
+                            <div class="d-grid gap-2">
+                                <a href="/barbershop" class="btn btn-primary-custom">
+                                    <i class="fas fa-tachometer-alt me-2"></i>Acceder al Panel
+                                </a>
+                                <a href="/" class="btn btn-outline-secondary">
+                                    <i class="fas fa-home me-2"></i>Volver al inicio
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="benefits-sidebar">
+                        <h4 class="mb-4 text-center">¿Qué incluye tu prueba?</h4>
+                        
+                        <div class="benefit-item">
+                            <div class="benefit-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-1">Acceso Completo</h6>
+                                <small class="text-muted">Todas las funciones premium disponibles</small>
+                            </div>
+                        </div>
+                        
+                        <div class="benefit-item">
+                            <div class="benefit-icon">
+                                <i class="fab fa-whatsapp"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-1">WhatsApp Integrado</h6>
+                                <small class="text-muted">Notificaciones automáticas a clientes</small>
+                            </div>
+                        </div>
+                        
+                        <div class="benefit-item">
+                            <div class="benefit-icon">
+                                <i class="fas fa-headset"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-1">Soporte 24/7</h6>
+                                <small class="text-muted">Asistencia técnica personalizada</small>
+                            </div>
+                        </div>
+                        
+                        <div class="benefit-item">
+                            <div class="benefit-icon">
+                                <i class="fas fa-cogs"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-1">Configuración Incluida</h6>
+                                <small class="text-muted">Te ayudamos a configurar todo</small>
+                            </div>
+                        </div>
+                        
+                        <div class="benefit-item">
+                            <div class="benefit-icon">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-1">App Móvil</h6>
+                                <small class="text-muted">Gestiona desde cualquier dispositivo</small>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <div class="alert alert-success">
+                                <i class="fas fa-gift me-2"></i>
+                                <strong>Valor: $50/mes</strong><br>
+                                <span class="text-decoration-line-through">Durante 30 días</span><br>
+                                <span class="h5 text-success">¡GRATIS!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h4>Creando tu cuenta...</h4>
+            <p>Por favor espera mientras configuramos tu barbería</p>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Countdown timer
+        function startCountdown() {
+            const countdownElement = document.getElementById('countdown');
+            let hours = 23;
+            let minutes = 59;
+            let seconds = 45;
+            
+            function updateCountdown() {
+                seconds--;
+                
+                if (seconds < 0) {
+                    seconds = 59;
+                    minutes--;
+                }
+                
+                if (minutes < 0) {
+                    minutes = 59;
+                    hours--;
+                }
+                
+                if (hours < 0) {
+                    hours = 23;
+                    minutes = 59;
+                    seconds = 45;
+                }
+                
+                const display = 
+                    String(hours).padStart(2, '0') + ':' + 
+                    String(minutes).padStart(2, '0') + ':' + 
+                    String(seconds).padStart(2, '0');
+                
+                countdownElement.textContent = display;
+            }
+            
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        }
+        
+        // Form submission
+        document.getElementById('trialForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                whatsapp_number: formData.get('whatsapp_number'),
+                address: formData.get('address'),
+                billing_day: parseInt(formData.get('billing_day')),
+                monthly_fee: parseFloat(formData.get('monthly_fee')),
+                password: formData.get('password'),
+                trial: true,
+                trial_days: 30
+            };
+            
+            // Show loading
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            
+            try {
+                const response = await fetch('/api/auth/register-barbershop', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                // Hide loading
+                document.getElementById('loadingOverlay').style.display = 'none';
+                
+                if (response.ok) {
+                    // Store token and user data
+                    localStorage.setItem('barbershop_token', result.token);
+                    localStorage.setItem('barbershop_user', JSON.stringify(result.user));
+                    
+                    // Show success message
+                    document.getElementById('registrationForm').style.display = 'none';
+                    document.getElementById('successMessage').style.display = 'block';
+                } else {
+                    alert('Error: ' + (result.error || 'Error desconocido'));
+                }
+            } catch (error) {
+                // Hide loading
+                document.getElementById('loadingOverlay').style.display = 'none';
+                console.error('Error:', error);
+                alert('Error de conexión. Por favor intenta nuevamente.');
+            }
+        });
+        
+        // Auto-fill WhatsApp from phone if empty
+        document.getElementById('phone').addEventListener('blur', function() {
+            const whatsappField = document.getElementById('whatsapp_number');
+            if (!whatsappField.value && this.value) {
+                whatsappField.value = this.value;
+            }
+        });
+        
+        // Password strength indicator
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+            let strength = 'Débil';
+            let color = 'text-danger';
+            
+            if (password.length >= 8) {
+                if (password.match(/[a-z]/) && password.match(/[A-Z]/) && password.match(/[0-9]/)) {
+                    strength = 'Fuerte';
+                    color = 'text-success';
+                } else {
+                    strength = 'Medio';
+                    color = 'text-warning';
+                }
+            }
+            
+            let indicator = this.parentNode.querySelector('.password-strength');
+            if (!indicator) {
+                indicator = document.createElement('small');
+                indicator.className = 'password-strength';
+                this.parentNode.appendChild(indicator);
+            }
+            
+            indicator.className = `password-strength ${color}`;
+            indicator.textContent = `Seguridad: ${strength}`;
+        });
+        
+        // Start countdown
+        startCountdown();
+        
+        // Form validation enhancement
+        const form = document.getElementById('trialForm');
+        form.addEventListener('input', function() {
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const requiredFields = form.querySelectorAll('[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value || (field.type === 'checkbox' && !field.checked)) {
+                    isValid = false;
+                }
+            });
+            
+            submitBtn.disabled = !isValid;
+            submitBtn.style.opacity = isValid ? '1' : '0.6';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+2025/08/31-00:15:04.108 90b Reusing MANIFEST /root/TU/whatsapp-sessions/session-barbershop_2/Default/Local Storage/leveldb/MANIFEST-000001
+2025/08/31-00:15:04.109 90b Recovering log #3
+2025/08/31-00:15:04.233 90b Reusing old log /root/TU/whatsapp-sessions/session-barbershop_2/Default/Local Storage/leveldb/000003.log 
+2025/08/31-05:07:59.224 2c8e Level-0 table #5: started
+2025/08/31-05:07:59.279 2c8e Level-0 table #5: 23145 bytes OK
+2025/08/31-05:07:59.333 2c8e Delete type=0 #3

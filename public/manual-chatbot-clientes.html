@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Usuario - Chatbot MiBarberiaWeb</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @media print {
+            body { 
+                background: white !important; 
+                font-size: 11pt;
+                line-height: 1.4;
+            }
+            .no-print { display: none !important; }
+            .page-break { page-break-before: always; }
+            h1 { font-size: 18pt; }
+            h2 { font-size: 16pt; }
+            h3 { font-size: 14pt; }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .document-container {
+            max-width: 210mm;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            min-height: 297mm;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" patternUnits="userSpaceOnUse" width="10" height="10"><rect fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5" width="10" height="10"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section h2 i {
+            margin-right: 15px;
+            color: #3498db;
+        }
+
+        .section h3 {
+            color: #34495e;
+            font-size: 1.4rem;
+            margin: 25px 0 15px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .section h3 i {
+            margin-right: 10px;
+            color: #e74c3c;
+            width: 20px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .whatsapp-conversation {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid #25D366;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-content {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            position: relative;
+            word-wrap: break-word;
+        }
+
+        .message.bot .message-content {
+            background: #e3f2fd;
+            color: #1565c0;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.user .message-content {
+            background: #25D366;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+            font-size: 1.2rem;
+        }
+
+        .message.bot .message-avatar {
+            background: #2196f3;
+            color: white;
+        }
+
+        .message.user .message-avatar {
+            background: #25D366;
+            color: white;
+        }
+
+        .step-list {
+            counter-reset: step-counter;
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .step-list li {
+            counter-increment: step-counter;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #3498db;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: -15px;
+            top: 20px;
+            background: #3498db;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .tip-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #f39c12;
+        }
+
+        .tip-box h4 {
+            color: #856404;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .tip-box h4 i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .warning-box {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #e74c3c;
+        }
+
+        .warning-box h4 {
+            color: #721c24;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .warning-box h4 i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #28a745;
+        }
+
+        .success-box h4 {
+            color: #155724;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .success-box h4 i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .command-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .command-table th,
+        .command-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .command-table th {
+            background: #3498db;
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .command-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .command {
+            background: #e8f4fd;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 15px;
+            color: #3498db;
+        }
+
+        .contact-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .contact-info i {
+            margin-right: 10px;
+            width: 20px;
+            color: #3498db;
+        }
+
+        .download-btn {
+            display: inline-block;
+            background: #27ae60;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 25px;
+            margin: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .download-btn:hover {
+            background: #219a52;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .toc {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .toc h2 {
+            border: none;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .toc ul li {
+            padding: 8px 0;
+            border-bottom: 1px dotted #ddd;
+        }
+
+        .toc ul li a {
+            text-decoration: none;
+            color: #3498db;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .toc ul li a:hover {
+            color: #2c3e50;
+        }
+
+        .phone-mockup {
+            width: 300px;
+            height: 600px;
+            border: 20px solid #2c3e50;
+            border-radius: 40px;
+            margin: 20px auto;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #25D366, #128C7E);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .whatsapp-logo {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .version-info {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #95a5a6;
+        }
+    </style>
+</head>
+<body>
+    <div class="document-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fab fa-whatsapp"></i>
+                </div>
+                <h1>Manual de Usuario</h1>
+                <p class="subtitle">Chatbot Inteligente MiBarberiaWeb</p>
+                <p style="margin-top: 20px; font-size: 1rem;">
+                    <i class="fas fa-calendar-alt"></i> Reserva tu cita fácilmente por WhatsApp
+                </p>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Tabla de Contenidos -->
+            <div class="toc">
+                <h2><i class="fas fa-list"></i> Contenido</h2>
+                <ul>
+                    <li><a href="#introduccion">1. Introducción <span>Pág. 1</span></a></li>
+                    <li><a href="#como-empezar">2. Cómo Empezar <span>Pág. 1</span></a></li>
+                    <li><a href="#comandos">3. Comandos Disponibles <span>Pág. 2</span></a></li>
+                    <li><a href="#reservar-cita">4. Reservar una Cita <span>Pág. 3</span></a></li>
+                    <li><a href="#consultar-citas">5. Consultar tus Citas <span>Pág. 4</span></a></li>
+                    <li><a href="#cancelar-cita">6. Cancelar una Cita <span>Pág. 4</span></a></li>
+                    <li><a href="#consejos">7. Consejos y Mejores Prácticas <span>Pág. 5</span></a></li>
+                    <li><a href="#problemas">8. Solución de Problemas <span>Pág. 5</span></a></li>
+                </ul>
+            </div>
+
+            <!-- Introducción -->
+            <div class="section" id="introduccion">
+                <h2><i class="fas fa-info-circle"></i> Introducción</h2>
+                <p>
+                    ¡Bienvenido al sistema de citas inteligente de MiBarberiaWeb! Nuestro chatbot de WhatsApp te permite reservar, consultar y gestionar tus citas de barbería de forma rápida y sencilla, las 24 horas del día.
+                </p>
+                
+                <div class="success-box">
+                    <h4><i class="fas fa-star"></i> Beneficios del Sistema</h4>
+                    <ul>
+                        <li><strong>Disponibilidad 24/7:</strong> Reserva turnos en cualquier momento</li>
+                        <li><strong>Cola inteligente:</strong> Conoce tu posición y tiempo de espera</li>
+                        <li><strong>Solo para hoy:</strong> Gestión de colas del día actual en tiempo real</li>
+                        <li><strong>Fácil de usar:</strong> Solo necesitas WhatsApp</li>
+                        <li><strong>Confirmación instantánea:</strong> Respuesta inmediata</li>
+                        <li><strong>Sistema de bloqueo:</strong> Protección contra spam automático</li>
+                    </ul>
+                </div>
+
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div class="whatsapp-logo">
+                            <i class="fab fa-whatsapp"></i>
+                        </div>
+                        <h3>MiBarberiaWeb</h3>
+                        <p>Tu barbería inteligente</p>
+                        <small>Siempre disponible para ti</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cómo Empezar -->
+            <div class="section" id="como-empezar">
+                <h2><i class="fas fa-play-circle"></i> Cómo Empezar</h2>
+                
+                <ul class="step-list">
+                    <li>
+                        <strong>Guarda el número de WhatsApp de tu barbería</strong>
+                        <p>Agrega el número oficial de WhatsApp de tu barbería a tus contactos. Este número aparece en la publicidad, redes sociales o te lo proporciona el personal.</p>
+                    </li>
+                    <li>
+                        <strong>Envía tu primer mensaje</strong>
+                        <p>Abre WhatsApp y envía cualquier mensaje al número de la barbería. Puede ser un simple "Hola" o "Buenos días". El chatbot responderá automáticamente.</p>
+                    </li>
+                    <li>
+                        <strong>Sigue las instrucciones</strong>
+                        <p>El chatbot te guiará paso a paso. Lee cuidadosamente las opciones y responde según las instrucciones.</p>
+                    </li>
+                </ul>
+
+                <div class="tip-box">
+                    <h4><i class="fas fa-lightbulb"></i> Consejo Importante</h4>
+                    <p>
+                        El chatbot está programado para entender mensajes en español. Escribe de forma clara y sin abreviaciones para obtener las mejores respuestas.
+                    </p>
+                </div>
+            </div>
+
+            <div class="page-break"></div>
+
+            <!-- Comandos Disponibles -->
+            <div class="section" id="comandos">
+                <h2><i class="fas fa-terminal"></i> Comandos Disponibles</h2>
+                
+                <p>El chatbot entiende varios comandos y frases. Aquí tienes una lista completa:</p>
+
+                <table class="command-table">
+                    <thead>
+                        <tr>
+                            <th>Comando</th>
+                            <th>Qué hace</th>
+                            <th>Ejemplo de uso</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="command">menu</span> / <span class="command">hola</span> / <span class="command">inicio</span></td>
+                            <td>Muestra el menú principal con todas las opciones</td>
+                            <td>"menu" o "hola"</td>
+                        </tr>
+                        <tr>
+                            <td><span class="command">1</span> / <span class="command">turnos</span></td>
+                            <td>Ver barberos disponibles AHORA y reservar turno</td>
+                            <td>"1" o "turnos"</td>
+                        </tr>
+                        <tr>
+                            <td><span class="command">2</span> / <span class="command">consultar</span></td>
+                            <td>Consultar el estado de tu turno del día</td>
+                            <td>"2" o "consultar"</td>
+                        </tr>
+                        <tr>
+                            <td><span class="command">3</span> / <span class="command">barberos</span></td>
+                            <td>Ver información de barberos disponibles</td>
+                            <td>"3" o "barberos"</td>
+                        </tr>
+                        <tr>
+                            <td><span class="command">4</span> / <span class="command">estado</span></td>
+                            <td>Ver estado actual de todas las colas</td>
+                            <td>"4" o "estado"</td>
+                        </tr>
+                        <tr>
+                            <td><span class="command">5</span> / <span class="command">cancelar</span></td>
+                            <td>Cancelar tu turno del día</td>
+                            <td>"5" o "cancelar"</td>
+                        </tr>
+                        <tr>
+                            <td><span class="command">A, B, C...</span></td>
+                            <td>Reservar directamente con barbero específico</td>
+                            <td>"A" para el primer barbero, "B" para el segundo</td>
+                        </tr>
+                        <tr>
+                            <td><span class="command">ayuda</span> / <span class="command">help</span> / <span class="command">?</span></td>
+                            <td>Mostrar ayuda completa con todos los comandos</td>
+                            <td>"ayuda" o "?"</td>
+                        </tr>
+                        <tr>
+                            <td><span class="command">contacto</span> / <span class="command">info</span></td>
+                            <td>Mostrar información de contacto de la barbería</td>
+                            <td>"contacto"</td>
+                        </tr>
+                        <tr>
+                            <td><span class="command">si</span> / <span class="command">no</span></td>
+                            <td>Confirmar o cancelar acciones (cancelación de turnos)</td>
+                            <td>"si" para confirmar cancelar turno</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="tip-box">
+                    <h4><i class="fas fa-magic"></i> ¿Sabías que...?</h4>
+                    <p>
+                        El chatbot funciona con <strong>turnos del día actual</strong> únicamente. No agenda citas para días futuros. El sistema está diseñado para gestionar colas de barbería en tiempo real, mostrando solo barberos que están <strong>disponibles en este momento</strong>.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Reservar un Turno -->
+            <div class="section" id="reservar-cita">
+                <h2><i class="fas fa-calendar-plus"></i> Reservar un Turno</h2>
+                
+                <p>Reservar un turno es muy sencillo y funciona solo para <strong>el día de hoy</strong>. Aquí te mostramos el proceso paso a paso:</p>
+
+                <div class="whatsapp-conversation">
+                    <div class="message user">
+                        <div class="message-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="message-content">
+                            hola
+                        </div>
+                    </div>
+                    
+                    <div class="message bot">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            ¡Hola! Bienvenido a *MiBarberiaWeb* ✂️<br><br>
+                            Selecciona una opción:<br><br>
+                            *1* - 📅 Reservar turno<br>
+                            *2* - 🔍 Consultar mi turno<br>
+                            *3* - 👨‍💼 Ver barberos disponibles<br>
+                            *4* - ⏰ Estado de la cola<br>
+                            *5* - ❌ Cancelar mi turno<br><br>
+                            Escribe el número de la opción que deseas
+                        </div>
+                    </div>
+                    
+                    <div class="message user">
+                        <div class="message-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="message-content">
+                            1
+                        </div>
+                    </div>
+                    
+                    <div class="message bot">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            📅 *Barberos disponibles AHORA:*<br><br>
+                            *A) Carlos* ✅<br>
+                            ⏰ 09:00 - 18:00<br>
+                            👥 2 personas esperando<br>
+                            🟢 *Disponible ahora*<br>
+                            Para reservar: escribe *A*<br><br>
+                            *B) Miguel* ✅<br>
+                            ⏰ 10:00 - 19:00<br>
+                            👥 0 personas esperando<br>
+                            🟢 *Disponible ahora*<br>
+                            Para reservar: escribe *B*
+                        </div>
+                    </div>
+                    
+                    <div class="message user">
+                        <div class="message-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="message-content">
+                            A
+                        </div>
+                    </div>
+                    
+                    <div class="message bot">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            ✅ *Turno reservado exitosamente*<br><br>
+                            👨‍💼 Barbero: *Carlos*<br>
+                            📍 Tu posición en la cola: *3*<br>
+                            ⏱️ Tiempo estimado de espera: *40 minutos*<br>
+                            🕐 Hora aproximada de atención: *15:20*<br>
+                            📅 Fecha: hoy<br><br>
+                            *Importante:*<br>
+                            • Mantente cerca del local<br>
+                            • Recibirás notificaciones de avances<br>
+                            • Escribe *estado* para consultar la cola
+                        </div>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <h4><i class="fas fa-exclamation-triangle"></i> ¡Importante!</h4>
+                    <p>
+                        <strong>Sistema de turnos del día:</strong> Solo puedes reservar turnos para HOY. El sistema gestiona colas en tiempo real, no agenda citas futuras. Una vez que reserves, tendrás una posición específica en la cola del barbero elegido.
+                    </p>
+                </div>
+            </div>
+
+            <div class="page-break"></div>
+
+            <!-- Consultar Turno -->
+            <div class="section" id="consultar-citas">
+                <h2><i class="fas fa-calendar-check"></i> Consultar tu Turno</h2>
+                
+                <p>Puedes consultar el estado de tu turno del día en cualquier momento:</p>
+
+                <div class="whatsapp-conversation">
+                    <div class="message user">
+                        <div class="message-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="message-content">
+                            2
+                        </div>
+                    </div>
+                    
+                    <div class="message bot">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            📋 *Estado de tu turno:*<br><br>
+                            👨‍💼 Barbero: *Carlos*<br>
+                            📍 Tu posición en la cola: *2*<br>
+                            🟡 Tiempo de espera: *20 minutos* (Moderado)<br>
+                            🕐 Hora estimada: *15:40*<br>
+                            📅 Fecha: hoy<br><br>
+                            *Opciones:*<br>
+                            *4* - ⏰ Ver estado general de colas<br>
+                            *5* - ❌ Cancelar mi turno<br>
+                            *menu* - 🏠 Volver al inicio
+                        </div>
+                    </div>
+                    
+                    <div class="message user">
+                        <div class="message-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="message-content">
+                            4
+                        </div>
+                    </div>
+                    
+                    <div class="message bot">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            📊 *Estado actual de las colas:*<br><br>
+                            👨‍💼 *Carlos*<br>
+                            👥 En espera: 2<br>
+                            ⏱️ Tiempo de espera aprox: 40 min<br><br>
+                            👨‍💼 *Miguel*<br>
+                            👥 En espera: 0<br>
+                            🟢 *Disponible inmediato*<br><br>
+                            Escribe *1* para reservar turno o *menu* para volver al inicio.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cancelar Turno -->
+            <div class="section" id="cancelar-cita">
+                <h2><i class="fas fa-calendar-times"></i> Cancelar tu Turno</h2>
+                
+                <p>Si necesitas cancelar tu turno del día, es muy fácil:</p>
+
+                <div class="whatsapp-conversation">
+                    <div class="message user">
+                        <div class="message-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="message-content">
+                            5
+                        </div>
+                    </div>
+                    
+                    <div class="message bot">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            ⚠️ *¿Seguro que quieres cancelar tu turno?*<br><br>
+                            👨‍💼 Barbero: *Carlos*<br>
+                            📍 Tu posición: *3*<br>
+                            🕐 Hora estimada: *15:20*<br><br>
+                            *¡IMPORTANTE!* Una vez cancelado no podrás recuperar tu lugar en la cola.<br><br>
+                            *si* - ❌ Sí, cancelar mi turno<br>
+                            *no* - ✅ No, mantener mi turno<br><br>
+                            Escribe *menu* para volver al inicio.
+                        </div>
+                    </div>
+                    
+                    <div class="message user">
+                        <div class="message-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="message-content">
+                            si
+                        </div>
+                    </div>
+                    
+                    <div class="message bot">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            ✅ *Turno cancelado exitosamente*<br><br>
+                            👨‍💼 Barbero: *Carlos*<br>
+                            📅 Fecha: hoy<br><br>
+                            Tu turno ha sido liberado y la cola se ha reorganizado.<br><br>
+                            Escribe *1* si quieres reservar otro turno o *menu* para volver al inicio.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <h4><i class="fas fa-clock"></i> Sistema de Cancelación</h4>
+                    <p>
+                        Cuando cancelas tu turno, la cola se reorganiza automáticamente y todos los turnos posteriores avanzan una posición. <strong>No se puede recuperar la posición original</strong> una vez cancelada.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Consejos -->
+            <div class="section" id="consejos">
+                <h2><i class="fas fa-lightbulb"></i> Consejos y Mejores Prácticas</h2>
+                
+                <h3><i class="fas fa-check-circle"></i> Para obtener el mejor servicio</h3>
+                <ul>
+                    <li><strong>Sé específico:</strong> "Quiero una cita mañana a las 3 PM" es mejor que solo "quiero una cita"</li>
+                    <li><strong>Confirma tu asistencia:</strong> Responde a los recordatorios que te envíe el chatbot</li>
+                    <li><strong>Llega puntual:</strong> El sistema está diseñado para minimizar esperas</li>
+                    <li><strong>Guarda el número:</strong> Agrega el WhatsApp de la barbería a tus contactos</li>
+                </ul>
+
+                <h3><i class="fas fa-mobile-alt"></i> Consejos técnicos</h3>
+                <ul>
+                    <li><strong>Conexión estable:</strong> Asegúrate de tener buena conexión a Internet</li>
+                    <li><strong>Actualiza WhatsApp:</strong> Mantén la app actualizada para mejor funcionamiento</li>
+                    <li><strong>Mensajes claros:</strong> Evita emojis excesivos o abreviaciones complejas</li>
+                    <li><strong>Un mensaje a la vez:</strong> Espera la respuesta antes de enviar el siguiente mensaje</li>
+                </ul>
+
+                <div class="success-box">
+                    <h4><i class="fas fa-trophy"></i> Funciones Premium</h4>
+                    <p>
+                        Algunas barberías ofrecen funciones adicionales como:
+                    </p>
+                    <ul>
+                        <li>💳 Pago por adelantado</li>
+                        <li>🎯 Servicios específicos (corte, barba, etc.)</li>
+                        <li>⭐ Sistema de calificaciones</li>
+                        <li>🎁 Programa de fidelidad</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Problemas Comunes -->
+            <div class="section" id="problemas">
+                <h2><i class="fas fa-tools"></i> Solución de Problemas</h2>
+                
+                <h3><i class="fas fa-question-circle"></i> El chatbot no responde</h3>
+                <div class="step-list">
+                    <li>Verifica tu conexión a Internet</li>
+                    <li>Asegúrate de haber enviado el mensaje al número correcto</li>
+                    <li>Espera unos segundos, el sistema puede estar procesando</li>
+                    <li>Intenta enviar "Hola" o "Menú" para reiniciar la conversación</li>
+                </div>
+
+                <h3><i class="fas fa-calendar-times"></i> No encuentro horarios disponibles</h3>
+                <div class="step-list">
+                    <li>Prueba con fechas diferentes (la barbería puede estar llena)</li>
+                    <li>Consulta los horarios de atención enviando "horarios"</li>
+                    <li>Considera horarios en días de semana (menos demandados)</li>
+                    <li>Contacta directamente a la barbería si es urgente</li>
+                </div>
+
+                <h3><i class="fas fa-exclamation-triangle"></i> Error en la reserva</h3>
+                <div class="step-list">
+                    <li>Reinicia la conversación enviando "menú"</li>
+                    <li>Verifica que todos los datos estén correctos</li>
+                    <li>Intenta con un horario diferente</li>
+                    <li>Si el problema persiste, contacta al soporte técnico</li>
+                </div>
+
+                <div class="warning-box">
+                    <h4><i class="fas fa-phone"></i> ¿Necesitas ayuda humana?</h4>
+                    <p>
+                        Si el chatbot no puede resolver tu problema, siempre puedes:
+                    </p>
+                    <ul>
+                        <li>📞 Llamar directamente a la barbería</li>
+                        <li>🏪 Visitar el local físicamente</li>
+                        <li>💬 Escribir "hablar con humano" para contactar al personal</li>
+                        <li>📧 Enviar un email si está disponible</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="version-info">
+                <h4><i class="fas fa-info-circle"></i> Información de Versión</h4>
+                <p>
+                    <strong>Manual versión:</strong> 2.1<br>
+                    <strong>Chatbot versión:</strong> MiBarberiaWeb Bot v3.0<br>
+                    <strong>Última actualización:</strong> Agosto 2024<br>
+                    <strong>Compatible con:</strong> WhatsApp Business API
+                </p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4><i class="fas fa-cut"></i> MiBarberiaWeb</h4>
+                    <p>Sistema inteligente de gestión de barberías. Optimizamos tu tiempo y mejoramos tu experiencia.</p>
+                    
+                    <a href="#" class="download-btn no-print">
+                        <i class="fas fa-download"></i> Descargar PDF
+                    </a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4><i class="fas fa-headset"></i> Soporte</h4>
+                    <div class="contact-info">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>WhatsApp: +57 300 123 4567</span>
+                    </div>
+                    <div class="contact-info">
+                        <i class="fas fa-envelope"></i>
+                        <span>support@barbertime.com</span>
+                    </div>
+                    <div class="contact-info">
+                        <i class="fas fa-globe"></i>
+                        <span>www.barbertime.com</span>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4><i class="fas fa-clock"></i> Disponibilidad</h4>
+                    <p><strong>Chatbot:</strong> 24/7 disponible</p>
+                    <p><strong>Soporte técnico:</strong><br>Lunes a Viernes: 8:00 AM - 6:00 PM<br>Sábados: 9:00 AM - 2:00 PM</p>
+                </div>
+            </div>
+            
+            <hr style="border-color: #34495e; margin: 20px 0;">
+            
+            <p style="text-align: center; margin: 0;">
+                &copy; 2024 MiBarberiaWeb. Todos los derechos reservados. 
+                <span class="no-print">| Manual de Usuario v2.1</span>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Print functionality
+        function printDocument() {
+            window.print();
+        }
+
+        // Download as PDF functionality (would need to be implemented with a backend service)
+        function downloadPDF() {
+            alert('Para descargar este manual como PDF, usa la función de imprimir de tu navegador y selecciona "Guardar como PDF".');
+        }
+
+        // Smooth scrolling for table of contents
+        document.querySelectorAll('.toc a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add click event to download button
+        document.querySelector('.download-btn')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            downloadPDF();
+        });
+    </script>
+</body>
+</html>

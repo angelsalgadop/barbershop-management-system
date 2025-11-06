@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Admin</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Debug Administradores</h1>
+        <button id="testEditAdmin" class="btn btn-primary">Test Edit Admin ID 1</button>
+        <button id="testEditAdmin2" class="btn btn-secondary">Test Edit Admin ID 2</button>
+        
+        <div id="debug-output" class="mt-3"></div>
+        
+        <!-- Modal de edición -->
+        <div class="modal fade" id="editAdminModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Editar Administrador</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editAdminForm">
+                            <div class="mb-3">
+                                <label class="form-label">Nombre *</label>
+                                <input type="text" class="form-control" name="name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Email *</label>
+                                <input type="email" class="form-control" name="email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Nueva Contraseña</label>
+                                <input type="password" class="form-control" name="password" minlength="6">
+                                <small class="form-text text-muted">Deja vacío para mantener la contraseña actual</small>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Rol *</label>
+                                <select class="form-select" name="role" required>
+                                    <option value="">Seleccione un rol</option>
+                                    <option value="admin">Admin</option>
+                                    <option value="super_admin" id="editSuperAdminOption">Super Admin</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="updateAdminBtn">Actualizar Administrador</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Simular el token de admin para pruebas
+        localStorage.setItem('admin_token', 'test-token-for-debug');
+        localStorage.setItem('admin_user', JSON.stringify({
+            id: 1,
+            name: 'Test Admin',
+            email: 'test@admin.com',
+            role: 'super_admin'
+        }));
+        
+        class DebugAdminPanel {
+            constructor() {
+                this.token = localStorage.getItem('admin_token');
+                this.setupDebugListeners();
+            }
+            
+            setupDebugListeners() {
+                document.getElementById('testEditAdmin').addEventListener('click', () => this.editAdmin(1));
+                document.getElementById('testEditAdmin2').addEventListener('click', () => this.editAdmin(2));
+            }
+            
+            async apiCall(url, options = {}) {
+                const debugOutput = document.getElementById('debug-output');
+                debugOutput.innerHTML += `<p><strong>API Call:</strong> ${url}</p>`;
+                
+                const defaultOptions = {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.token}`
+                    }
+                };
+
+                return fetch(url, { ...defaultOptions, ...options });
+            }
+            
+            async editAdmin(adminId) {
+                try {
+                    const debugOutput = document.getElementById('debug-output');
+                    debugOutput.innerHTML += `<p>Cargando datos del admin ID: ${adminId}</p>`;
+                    
+                    const response = await this.apiCall(`/api/auth/admin/get-admin/${adminId}`);
+                    
+                    debugOutput.innerHTML += `<p>Respuesta del servidor: ${response.status} ${response.statusText}</p>`;
+                    
+                    if (response.ok) {
+                        const admin = await response.json();
+                        debugOutput.innerHTML += `<p>Datos recibidos: ${JSON.stringify(admin)}</p>`;
+                        this.showEditAdminModal(admin);
+                    } else {
+                        const error = await response.json().catch(() => ({ error: 'Error desconocido' }));
+                        debugOutput.innerHTML += `<p class="text-danger">Error del servidor: ${JSON.stringify(error)}</p>`;
+                    }
+                } catch (error) {
+                    const debugOutput = document.getElementById('debug-output');
+                    debugOutput.innerHTML += `<p class="text-danger">Exception: ${error.message}</p>`;
+                }
+            }
+            
+            showEditAdminModal(admin) {
+                try {
+                    const debugOutput = document.getElementById('debug-output');
+                    debugOutput.innerHTML += `<p>Mostrando modal para admin: ${admin.name}</p>`;
+                    
+                    const form = document.getElementById('editAdminForm');
+                    if (!form) {
+                        throw new Error('Formulario de edición no encontrado');
+                    }
+
+                    const nameInput = form.querySelector('input[name="name"]');
+                    const emailInput = form.querySelector('input[name="email"]');
+                    const roleSelect = form.querySelector('select[name="role"]');
+                    const passwordInput = form.querySelector('input[name="password"]');
+
+                    if (!nameInput || !emailInput || !roleSelect || !passwordInput) {
+                        throw new Error('No se pudieron encontrar todos los elementos del formulario');
+                    }
+
+                    nameInput.value = admin.name || '';
+                    emailInput.value = admin.email || '';
+                    roleSelect.value = admin.role || '';
+                    passwordInput.value = '';
+                    
+                    const modalElement = document.getElementById('editAdminModal');
+                    if (!modalElement) {
+                        throw new Error('Modal de edición no encontrado');
+                    }
+
+                    const modal = new bootstrap.Modal(modalElement);
+                    modal.show();
+
+                    debugOutput.innerHTML += `<p class="text-success">Modal mostrado exitosamente</p>`;
+                } catch (error) {
+                    const debugOutput = document.getElementById('debug-output');
+                    debugOutput.innerHTML += `<p class="text-danger">Error mostrando modal: ${error.message}</p>`;
+                }
+            }
+        }
+        
+        // Inicializar debug panel
+        const debugPanel = new DebugAdminPanel();
+    </script>
+</body>
+</html>

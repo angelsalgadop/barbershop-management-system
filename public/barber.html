@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Barbero - Plataforma Barberías</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .navbar-brand, .navbar-nav .nav-link {
+            color: white !important;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+        }
+        .stats-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .stats-card.success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+        .stats-card.warning {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        .stats-card.info {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .queue-card {
+            border-left: 4px solid #667eea;
+            background: white;
+        }
+        .queue-item {
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s ease;
+        }
+        .queue-item:last-child {
+            border-bottom: none;
+        }
+        .queue-item:hover {
+            background-color: #f8f9fa;
+        }
+        .queue-number {
+            background: #667eea;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .queue-number.active {
+            background: #28a745;
+            animation: pulse 2s infinite;
+        }
+        .queue-number.waiting {
+            background: #ffc107;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+        }
+        .btn-action {
+            border-radius: 25px;
+            padding: 8px 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+        .schedule-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .schedule-day {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+        .schedule-day:last-child {
+            border-bottom: none;
+        }
+        .day-name {
+            font-weight: 600;
+            color: #667eea;
+            width: 100px;
+        }
+        .day-time {
+            color: #6c757d;
+        }
+        .day-status {
+            margin-left: auto;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #667eea;
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            min-width: 300px;
+        }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+        }
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #dee2e6;
+        }
+        @media (max-width: 768px) {
+            .container-fluid {
+                padding: 10px;
+            }
+            .card {
+                margin-bottom: 15px;
+            }
+            .queue-item {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-cut"></i> Panel Barbero
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#dashboard" id="dashboardTab">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item" style="display: none;">
+                        <a class="nav-link" href="#schedule" id="scheduleTab">
+                            <i class="fas fa-calendar-alt"></i> Horarios
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#history" id="historyTab">
+                            <i class="fas fa-history"></i> Historial
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user"></i> <span id="barberName">Barbero</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#profile" id="profileLink">Perfil</a></li>
+                            <li><a class="dropdown-item" href="#" id="changePasswordLink">Cambiar Contraseña</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="logoutLink">Cerrar Sesión</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-4">
+        <!-- Dashboard Section -->
+        <div id="dashboard-section">
+            <!-- Botón de Control de Turno -->
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                        <div class="card-body py-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="mb-0"><i class="fas fa-briefcase"></i> Estado Laboral</h5>
+                                    <small id="workStatusText">Cargando...</small>
+                                </div>
+                                <button class="btn btn-lg btn-light" id="toggleWorkBtn" onclick="barberPanel.toggleWork()" disabled>
+                                    <i class="fas fa-spinner fa-spin"></i> Cargando...
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-3 col-sm-6">
+                    <div class="card stats-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-grow-1">
+                                    <h3 class="mb-0" id="todayAppointments">0</h3>
+                                    <p class="mb-0">Turnos Hoy</p>
+                                </div>
+                                <i class="fas fa-calendar-day fa-2x opacity-75"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="card stats-card success">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-grow-1">
+                                    <h3 class="mb-0" id="completedToday">0</h3>
+                                    <p class="mb-0">Completados</p>
+                                </div>
+                                <i class="fas fa-check-circle fa-2x opacity-75"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="card stats-card warning">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-grow-1">
+                                    <h3 class="mb-0" id="waitingClients">0</h3>
+                                    <p class="mb-0">En Espera</p>
+                                </div>
+                                <i class="fas fa-clock fa-2x opacity-75"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="card stats-card info">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-grow-1">
+                                    <h3 class="mb-0" id="avgServiceTime">30</h3>
+                                    <p class="mb-0">Min x Cliente</p>
+                                </div>
+                                <i class="fas fa-stopwatch fa-2x opacity-75"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card queue-card">
+                        <div class="card-header bg-white">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-users"></i> Cola de Turnos - <span id="currentDate"></span>
+                                </h5>
+                                <button class="btn btn-outline-primary btn-sm" id="refreshQueueBtn">
+                                    <i class="fas fa-sync-alt"></i> Actualizar
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div id="queueContainer">
+                                <!-- Queue items will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-tools"></i> Acciones Rápidas
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-success btn-action" id="callNextBtn" disabled>
+                                    <i class="fas fa-phone"></i> Llamar Siguiente
+                                </button>
+                                <button class="btn btn-info btn-action" id="completeCurrentBtn" disabled>
+                                    <i class="fas fa-check"></i> Completar Actual
+                                </button>
+                                <button class="btn btn-warning btn-action" id="notifyClientsBtn">
+                                    <i class="fas fa-bell"></i> Notificar Cola
+                                </button>
+                                <button class="btn btn-outline-secondary btn-action" id="pauseServiceBtn">
+                                    <i class="fas fa-pause"></i> Pausar Servicio
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-clock"></i> Estado Actual
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center">
+                                <div class="mb-3">
+                                    <div class="queue-number active mb-2" id="currentClientNumber">-</div>
+                                    <h6 id="currentClientName">Sin cliente actual</h6>
+                                    <small class="text-muted" id="currentClientTime">-</small>
+                                </div>
+                                <div class="row text-center">
+                                    <div class="col-6">
+                                        <strong id="nextClientNumber">-</strong>
+                                        <br><small>Siguiente</small>
+                                    </div>
+                                    <div class="col-6">
+                                        <strong id="estimatedWaitTime">0 min</strong>
+                                        <br><small>Tiempo Restante</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schedule Section -->
+        <div id="schedule-section" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-calendar-alt"></i> Configurar Horarios</h2>
+                <button class="btn btn-primary" id="saveScheduleBtn">
+                    <i class="fas fa-save"></i> Guardar Horarios
+                </button>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card schedule-card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Horarios Semanales</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div id="scheduleContainer">
+                                <!-- Schedule items will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0">Configuración</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">Duración por Cliente (minutos)</label>
+                                <input type="number" class="form-control" id="serviceDurationInput" min="5" max="180" step="5">
+                            </div>
+                            <button class="btn btn-primary w-100" id="updateServiceDurationBtn">
+                                Actualizar Duración
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">Disponibilidad Rápida</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-outline-success" onclick="barberPanel.setQuickSchedule('weekdays')">
+                                    Lunes a Viernes 9-18h
+                                </button>
+                                <button class="btn btn-outline-success" onclick="barberPanel.setQuickSchedule('weekend')">
+                                    Solo Fines de Semana
+                                </button>
+                                <button class="btn btn-outline-success" onclick="barberPanel.setQuickSchedule('fulltime')">
+                                    Tiempo Completo
+                                </button>
+                                <button class="btn btn-outline-danger" onclick="barberPanel.clearAllSchedule()">
+                                    Limpiar Todo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- History Section -->
+        <div id="history-section" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-history"></i> Historial de Turnos</h2>
+                <div>
+                    <input type="date" class="form-control d-inline-block" id="historyDateFilter" style="width: auto;">
+                    <button class="btn btn-outline-primary" id="filterHistoryBtn">
+                        <i class="fas fa-filter"></i> Filtrar
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="historyTable">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Cliente</th>
+                                    <th>Teléfono</th>
+                                    <th>Hora Inicio</th>
+                                    <th>Hora Fin</th>
+                                    <th>Estado</th>
+                                    <th>Duración</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyTableBody">
+                                <tr>
+                                    <td colspan="7" class="text-center">Cargando historial...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="text-center">
+            <div class="spinner"></div>
+            <p class="mt-3">Cargando...</p>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changePasswordModalLabel">Cambiar Contraseña</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="changePasswordForm">
+                        <div class="mb-3">
+                            <label for="currentPassword" class="form-label">Contraseña Actual</label>
+                            <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newPassword" class="form-label">Nueva Contraseña</label>
+                            <input type="password" class="form-control" id="newPassword" name="newPassword" minlength="6" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Confirmar Nueva Contraseña</label>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" minlength="6" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="savePasswordBtn">Cambiar Contraseña</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.4/socket.io.js"></script>
+    <script src="js/barber.js"></script>
+</body>
+</html>

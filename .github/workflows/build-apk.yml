@@ -1,0 +1,129 @@
+name: Build Android APK
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: mobile-app/package-lock.json
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Install dependencies
+        working-directory: ./mobile-app
+        run: npm ci
+
+      - name: Cache Gradle
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Make Gradlew executable
+        working-directory: ./mobile-app/android
+        run: chmod +x ./gradlew
+
+      - name: Build Debug APK
+        working-directory: ./mobile-app/android
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: Build Release APK
+        working-directory: ./mobile-app/android
+        run: ./gradlew assembleRelease --no-daemon
+
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug
+          path: mobile-app/android/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Upload Release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: mobile-app/android/app/build/outputs/apk/release/app-release.apk
+
+      - name: Create Release
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            mobile-app/android/app/build/outputs/apk/debug/app-debug.apk
+            mobile-app/android/app/build/outputs/apk/release/app-release.apk
+          tag_name: v${{ github.run_number }}
+          name: Release v${{ github.run_number }}
+          body: |
+            ## Barbershop Mobile App
+
+            ### Funcionalidades Incluidas
+
+            #### Admin
+            - Dashboard con estadísticas en tiempo real
+            - Gestión completa de barberías (crear, editar, suspender, eliminar)
+            - Sistema de facturación y pagos
+            - Vista de todas las transacciones
+
+            #### Barbershop (Dueño de Barbería)
+            - Dashboard con estadísticas del día
+            - Gestión de barberos (agregar, editar, activar/desactivar)
+            - Gestión de citas y appointments
+            - Integración con WhatsApp (QR code, mensajes)
+            - Reportes financieros por período
+            - Vista de comisiones por barbero
+            - Gestión de horarios
+            - Perfil de negocio editable
+
+            #### Barber (Barbero)
+            - Dashboard con estadísticas personales
+            - Gestión de cola en tiempo real
+            - Llamar siguiente cliente
+            - Completar servicios con monto
+            - Vista de horario personal
+            - Perfil personal editable
+
+            #### Características Técnicas
+            - Actualización en tiempo real con Socket.IO
+            - Autenticación JWT
+            - Modo offline con AsyncStorage
+            - Pull to refresh en todas las pantallas
+            - Manejo de errores robusto
+            - Interfaz intuitiva y moderna
+
+            ### Instalación
+            1. Descarga el archivo APK
+            2. Habilita "Instalar desde fuentes desconocidas" en tu dispositivo Android
+            3. Instala el APK
+            4. Abre la aplicación y inicia sesión
+
+            ### Servidor
+            La app se conecta a: https://mibarberiaweb.com
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

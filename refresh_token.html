@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refresh Token</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Actualizar Token de Administrador</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Si cambiaste tu rol de admin a super_admin, usa este botón para actualizar tu token:</p>
+                        <button id="refreshTokenBtn" class="btn btn-primary w-100">
+                            Actualizar Token
+                        </button>
+                        <div id="status" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('refreshTokenBtn').addEventListener('click', async () => {
+            const statusDiv = document.getElementById('status');
+            const btn = document.getElementById('refreshTokenBtn');
+            
+            try {
+                btn.disabled = true;
+                btn.textContent = 'Actualizando...';
+                statusDiv.innerHTML = '<div class="alert alert-info">Actualizando token...</div>';
+                
+                const token = localStorage.getItem('admin_token');
+                if (!token) {
+                    throw new Error('No hay token de administrador');
+                }
+                
+                const response = await fetch('/api/auth/admin/refresh-token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    // Actualizar localStorage con el nuevo token y datos de usuario
+                    localStorage.setItem('admin_token', data.token);
+                    localStorage.setItem('admin_user', JSON.stringify(data.user));
+                    
+                    statusDiv.innerHTML = `
+                        <div class="alert alert-success">
+                            <strong>¡Token actualizado exitosamente!</strong><br>
+                            Rol actual: <strong>${data.user.role}</strong><br>
+                            <a href="/admin" class="btn btn-sm btn-outline-success mt-2">Ir al Panel de Admin</a>
+                        </div>
+                    `;
+                } else {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Error desconocido');
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `
+                    <div class="alert alert-danger">
+                        <strong>Error:</strong> ${error.message}<br>
+                        <small>Es posible que necesites hacer login nuevamente.</small><br>
+                        <a href="/admin" class="btn btn-sm btn-outline-primary mt-2">Ir a Login</a>
+                    </div>
+                `;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Actualizar Token';
+            }
+        });
+        
+        // Mostrar información del token actual
+        window.addEventListener('load', () => {
+            const user = JSON.parse(localStorage.getItem('admin_user') || '{}');
+            const statusDiv = document.getElementById('status');
+            
+            if (user.email) {
+                statusDiv.innerHTML = `
+                    <div class="alert alert-info">
+                        <strong>Token actual:</strong><br>
+                        Email: ${user.email}<br>
+                        Rol: <strong>${user.role}</strong>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

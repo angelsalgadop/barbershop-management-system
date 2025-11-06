@@ -1,0 +1,23 @@
+2025/11/05-12:51:45.068 7cf Reusing MANIFEST /root/TU/whatsapp-sessions/session-barbershop_4/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-005673
+2025/11/05-12:51:45.068 7cf Recovering log #6390
+2025/11/05-12:51:45.328 7cf Reusing old log /root/TU/whatsapp-sessions/session-barbershop_4/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/006390.log 
+2025/11/05-12:51:48.022 7cd Level-0 table #6395: started
+2025/11/05-12:51:48.071 7cd Level-0 table #6395: 846263 bytes OK
+2025/11/05-12:51:48.078 7cd Delete type=0 #6390
+2025/11/05-12:51:48.078 7cd Manual compaction at level-0 from ' \x8c\x01\x00\x00\x00' @ 72057594037927935 : 1 .. ' \x8d\x01\x00\x00\x00' @ 0 : 0; will stop at (end)
+2025/11/05-12:51:51.053 7df Compacting 1@1 + 1@2 files
+2025/11/05-12:51:51.184 7df Generated table #6396@1: 37096 keys, 1560885 bytes
+2025/11/05-12:51:51.184 7df Compacted 1@1 + 1@2 files => 1560885 bytes
+2025/11/05-12:51:51.190 7df compacted to: files[ 0 0 1 0 0 0 0 ]
+2025/11/05-15:11:36.149 6867 Level-0 table #6398: started
+2025/11/05-15:11:36.157 6867 Level-0 table #6398: 183331 bytes OK
+2025/11/05-15:11:36.161 6867 Delete type=2 #6395
+2025/11/05-15:11:36.161 6867 Delete type=0 #6394
+2025/11/05-15:11:36.161 6867 Delete type=2 #6392
+2025/11/05-15:11:36.162 6867 Manual compaction at level-0 from ' \x8d\x01\x00\x00\x00' @ 72057594037927935 : 1 .. ' \x8e\x01\x00\x00\x00' @ 0 : 0; will stop at (end)
+2025/11/05-15:29:39.529 7133 Compacting 1@1 + 1@2 files
+2025/11/05-15:29:39.575 7133 Generated table #6399@1: 37982 keys, 1593953 bytes
+2025/11/05-15:29:39.575 7133 Compacted 1@1 + 1@2 files => 1593953 bytes
+2025/11/05-15:29:39.579 7133 compacted to: files[ 0 0 1 0 0 0 0 ]
+2025/11/05-15:29:39.579 7133 Delete type=2 #6396
+2025/11/05-15:29:39.579 7133 Delete type=2 #6398

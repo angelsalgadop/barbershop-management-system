@@ -1,0 +1,75 @@
+# Node modules
+node_modules/
+mobile-app/node_modules/
+
+# npm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pm2.log
+*.pid
+
+# React Native
+mobile-app/.expo/
+mobile-app/.expo-shared/
+mobile-app/dist/
+mobile-app/build/
+
+# Android
+mobile-app/android/app/build/
+mobile-app/android/.gradle/
+mobile-app/android/local.properties
+mobile-app/android/.idea/
+mobile-app/android/*.iml
+mobile-app/android/gradle.properties
+mobile-app/android/keystore.properties
+
+# iOS
+mobile-app/ios/Pods/
+mobile-app/ios/build/
+mobile-app/ios/*.xcworkspace/xcuserdata/
+mobile-app/ios/*.xcodeproj/xcuserdata/
+mobile-app/ios/*.xcodeproj/project.xcworkspace/xcuserdata/
+
+# Temporary files
+*.tmp
+.temp
+.cache
+
+# Testing
+coverage/
+
+# Database
+*.sqlite
+*.db
+
+# SSL certificates (keep your certificates private!)
+*.pem
+*.key
+*.crt
+certificates/
+
+# Backup files
+*.bak
+*.backup

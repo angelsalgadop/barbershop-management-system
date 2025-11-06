@@ -1,0 +1,13 @@
+2025/11/04-16:29:48.898 1becf8 Reusing MANIFEST /root/TU/whatsapp-sessions/session-barbershop_4/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-005673
+2025/11/04-16:29:48.899 1becf8 Recovering log #6386
+2025/11/04-16:29:49.019 1becf8 Reusing old log /root/TU/whatsapp-sessions/session-barbershop_4/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/006386.log 
+2025/11/04-16:29:52.960 1bed28 Level-0 table #6391: started
+2025/11/04-16:29:52.975 1bed28 Level-0 table #6391: 196732 bytes OK
+2025/11/04-16:29:52.979 1bed28 Delete type=0 #6386
+2025/11/04-16:29:52.979 1bed28 Manual compaction at level-0 from ' \x8b\x01\x00\x00\x00' @ 72057594037927935 : 1 .. ' \x8c\x01\x00\x00\x00' @ 0 : 0; will stop at (end)
+2025/11/04-16:29:58.782 1becec Compacting 1@1 + 1@2 files
+2025/11/04-16:29:58.898 1becec Generated table #6392@1: 35710 keys, 1513100 bytes
+2025/11/04-16:29:58.898 1becec Compacted 1@1 + 1@2 files => 1513100 bytes
+2025/11/04-16:29:58.903 1becec compacted to: files[ 0 0 1 0 0 0 0 ]
+2025/11/04-16:29:58.903 1becec Delete type=2 #6391
+2025/11/04-16:29:58.903 1becec Delete type=2 #6388
