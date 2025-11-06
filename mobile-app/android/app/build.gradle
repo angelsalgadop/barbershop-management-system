@@ -60,7 +60,7 @@ def enableProguardInReleaseBuilds = false
  * Set this to true to use Hermes instead of JavaScriptCore (JSC).
  * Hermes is a JavaScript engine optimized for React Native.
  */
-def hermesEnabled = project.ext.react.get("enableHermes", true)
+def hermesEnabled = true
 
 /**
  * The preferred build flavor of JavaScriptCore (JSC)
