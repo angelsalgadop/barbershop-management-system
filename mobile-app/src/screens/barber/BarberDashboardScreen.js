@@ -53,7 +53,17 @@ const BarberDashboardScreen = () => {
     try {
       const today = new Date().toISOString().split('T')[0];
       console.log('Loading barber stats for:', user?.barber_id, 'date:', today);
-      const response = await api.get(`/api/appointments/barber/${user?.barber_id}/${today}`);
+
+      // Timeout de 5 segundos para la carga de stats
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Stats loading timeout')), 5000)
+      );
+
+      const response = await Promise.race([
+        api.get(`/api/appointments/barber/${user?.barber_id}/${today}`),
+        timeoutPromise
+      ]);
+
       const appointments = response.data;
 
       const totalToday = appointments.length;
@@ -64,6 +74,12 @@ const BarberDashboardScreen = () => {
       console.log('Barber stats:', { totalToday, completed, inQueue });
     } catch (error) {
       console.error('Error loading barber stats:', error);
+      // Continuar con stats por defecto, no bloquear la UI
+      setStats({
+        totalToday: 0,
+        completed: 0,
+        inQueue: 0,
+      });
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -73,6 +89,13 @@ const BarberDashboardScreen = () => {
   useEffect(() => {
     if (user?.barber_id) {
       loadStats();
+    } else {
+      // Si no hay barber_id después de 2 segundos, dejar de cargar
+      const timeout = setTimeout(() => {
+        console.log('No barber_id found, stopping loading');
+        setLoading(false);
+      }, 2000);
+      return () => clearTimeout(timeout);
     }
   }, [user?.barber_id]);
 

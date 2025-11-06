@@ -55,11 +55,30 @@ const BarbershopDashboardScreen = () => {
   const loadStats = async () => {
     try {
       console.log('Loading barbershop stats for:', user?.barbershop_id);
-      const response = await api.get(`/api/barbershops/${user?.barbershop_id}/stats`);
+
+      // Timeout de 5 segundos para la carga de stats
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Stats loading timeout')), 5000)
+      );
+
+      const response = await Promise.race([
+        api.get(`/api/barbershops/${user?.barbershop_id}/stats`),
+        timeoutPromise
+      ]);
+
       console.log('Stats loaded:', response.data);
       setStats(response.data);
     } catch (error) {
       console.error('Error loading stats:', error);
+      // Continuar con stats por defecto, no bloquear la UI
+      setStats({
+        today_appointments: 0,
+        monthly_appointments: 0,
+        active_barbers: 0,
+        waiting_clients: 0,
+        todayRevenue: 0,
+        totalClients: 0,
+      });
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -69,6 +88,13 @@ const BarbershopDashboardScreen = () => {
   useEffect(() => {
     if (user?.barbershop_id) {
       loadStats();
+    } else {
+      // Si no hay barbershop_id después de 2 segundos, dejar de cargar
+      const timeout = setTimeout(() => {
+        console.log('No barbershop_id found, stopping loading');
+        setLoading(false);
+      }, 2000);
+      return () => clearTimeout(timeout);
     }
   }, [user?.barbershop_id]);
 

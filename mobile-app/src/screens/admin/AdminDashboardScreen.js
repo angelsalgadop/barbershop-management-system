@@ -56,9 +56,18 @@ const AdminDashboardScreen = () => {
   const loadStats = async () => {
     try {
       console.log('Loading admin dashboard stats...');
-      const [dashboardResponse, barbershopsResponse] = await Promise.all([
-        api.get('/api/admin/dashboard'),
-        api.get('/api/barbershops'),
+
+      // Timeout de 5 segundos para la carga de stats
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Stats loading timeout')), 5000)
+      );
+
+      const [dashboardResponse, barbershopsResponse] = await Promise.race([
+        Promise.all([
+          api.get('/api/admin/dashboard'),
+          api.get('/api/barbershops'),
+        ]),
+        timeoutPromise
       ]);
 
       setStats(dashboardResponse.data);
@@ -66,6 +75,16 @@ const AdminDashboardScreen = () => {
       console.log('Admin stats loaded:', dashboardResponse.data);
     } catch (error) {
       console.error('Error loading admin stats:', error);
+      // Continuar con stats por defecto, no bloquear la UI
+      setStats({
+        totalBarbershops: 0,
+        totalBarbers: 0,
+        todayAppointments: 0,
+        monthRevenue: 0,
+        suspendedBarbershops: 0,
+        pendingPayments: 0,
+      });
+      setBarbershopsCount(0);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -74,6 +93,12 @@ const AdminDashboardScreen = () => {
 
   useEffect(() => {
     loadStats();
+    // Timeout de seguridad: si no carga en 10 segundos, detener loading
+    const timeout = setTimeout(() => {
+      console.log('Stats loading timeout, stopping loading');
+      setLoading(false);
+    }, 10000);
+    return () => clearTimeout(timeout);
   }, []);
 
   const onRefresh = () => {
