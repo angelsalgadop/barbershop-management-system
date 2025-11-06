@@ -27,8 +27,10 @@ export const AuthProvider = ({children}) => {
         setUser(JSON.parse(savedUser));
         setUserType(savedUserType);
         setIsAuthenticated(true);
-        // Conectar socket
-        await socketService.connect();
+        // Conectar socket en segundo plano (no bloquear el login)
+        socketService.connect().catch(err => {
+          console.error('Error al conectar socket en checkAuth:', err);
+        });
       }
     } catch (error) {
       console.error('Error al verificar autenticación:', error);
@@ -58,8 +60,10 @@ export const AuthProvider = ({children}) => {
         setUserType(type);
         setIsAuthenticated(true);
 
-        // Conectar socket
-        await socketService.connect();
+        // Conectar socket en segundo plano (no bloquear el login)
+        socketService.connect().catch(err => {
+          console.error('Error al conectar socket en login:', err);
+        });
 
         return {success: true, user: userData};
       } else {
