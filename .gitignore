@@ -73,3 +73,11 @@ certificates/
 # Backup files
 *.bak
 *.backup
+
+# WhatsApp sessions
+whatsapp-sessions/
+.wwebjs_cache/
+.wwebjs_auth/
+
+# Claude settings
+.claude/settings.local.json
